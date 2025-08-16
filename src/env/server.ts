@@ -4,7 +4,7 @@ import { z } from "zod";
 export const env = createEnv({
   server: {
     DATABASE_URL: z.url(),
-    NODE_ENV: z.enum(["development", "production"]),
+    NODE_ENV: z.enum(["development", "test", "production"]),
   },
   // If you're using Next.js < 13.4.4, you'll need to specify the runtimeEnv manually
   // runtimeEnv: {
