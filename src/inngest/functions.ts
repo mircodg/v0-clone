@@ -10,7 +10,7 @@ const helloWorld = inngest.createFunction(
   }
 );
 
-const summarizeContents = inngest.createFunction(
+const generateCodeFunction = inngest.createFunction(
   { id: "code-agent" },
   { event: "app/generate.code" },
   async ({ event }) => {
@@ -22,4 +22,4 @@ const summarizeContents = inngest.createFunction(
   }
 );
 
-export const functions = [helloWorld, summarizeContents];
+export const functions = [helloWorld, generateCodeFunction];
