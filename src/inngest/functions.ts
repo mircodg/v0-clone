@@ -1,5 +1,7 @@
 import { inngest } from "./client";
 import { codeAgent } from "./agents";
+import { Sandbox } from "@e2b/code-interpreter";
+import { getSandbox } from "@/e2b/utils";
 
 const helloWorld = inngest.createFunction(
   { id: "hello-world" },
@@ -13,12 +15,25 @@ const helloWorld = inngest.createFunction(
 const generateCodeFunction = inngest.createFunction(
   { id: "code-agent" },
   { event: "app/generate.code" },
-  async ({ event }) => {
+  async ({ event, step }) => {
+    // fetch sandbox id
+    const sandboxId = await step.run("fetch-sandbox", async () => {
+      const sandbox = await Sandbox.create("v0-clone-nextjs-template");
+      return sandbox.sandboxId;
+    });
+
     const { output } = await codeAgent.run(`
         Write the following snippet: ${event.data.text}
         `);
 
-    return output;
+    // generate sandbox url
+    const sandboxUrl = await step.run("generate-sandbox-url", async () => {
+      const sandbox = await getSandbox(sandboxId);
+      const host = sandbox.getHost(3000);
+      return `https://${host}`;
+    });
+
+    return { output, sandboxUrl };
   }
 );
 
