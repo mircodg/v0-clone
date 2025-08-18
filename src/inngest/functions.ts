@@ -1,7 +1,7 @@
-import { inngest } from "./client";
-import { codeAgent } from "./agents";
+import { inngest } from "@/inngest/client";
 import { Sandbox } from "@e2b/code-interpreter";
 import { getSandbox } from "@/e2b/utils";
+import { network } from "@/inngest/network";
 
 const helloWorld = inngest.createFunction(
   { id: "hello-world" },
@@ -22,9 +22,14 @@ const generateCodeFunction = inngest.createFunction(
       return sandbox.sandboxId;
     });
 
-    const { output } = await codeAgent.run(`
-        Write the following snippet: ${event.data.text}
-        `);
+    // initialize the network state with the sandbox id
+    const result = await network.run(event.data.text, {
+      state: {
+        data: {
+          sandboxId: sandboxId,
+        },
+      },
+    });
 
     // generate sandbox url
     const sandboxUrl = await step.run("generate-sandbox-url", async () => {
@@ -33,7 +38,11 @@ const generateCodeFunction = inngest.createFunction(
       return `https://${host}`;
     });
 
-    return { output, sandboxUrl };
+    return {
+      url: sandboxUrl,
+      files: result.state.data.files,
+      summary: result.state.data.summary,
+    };
   }
 );
 
