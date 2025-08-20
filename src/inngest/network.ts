@@ -1,7 +1,8 @@
 import { createNetwork } from "@inngest/agent-kit";
 import { codeAgent } from "@/inngest/agents";
+import { AgentState } from "@/inngest/types";
 
-export const network = createNetwork({
+export const network = createNetwork<AgentState>({
   name: "coding-agent-network",
   agents: [codeAgent],
   maxIter: 15, // max number of iterations

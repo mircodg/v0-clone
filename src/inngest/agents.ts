@@ -2,9 +2,11 @@ import { openai, createAgent } from "@inngest/agent-kit";
 import { readFiles, createOrUpdateFiles, terminal } from "@/inngest/tools";
 import { PROMPT } from "@/inngest/prompt";
 import { lastAssistantMessageContent } from "@/inngest/utils";
+import { AgentState } from "@/inngest/types";
 
-export const codeAgent = createAgent({
+export const codeAgent = createAgent<AgentState>({
   name: "code-agent",
+  description: "An expert coding agent",
   system: PROMPT,
   model: openai({ model: "gpt-4.1", defaultParameters: { temperature: 0.1 } }),
   tools: [terminal, createOrUpdateFiles, readFiles],
