@@ -46,6 +46,7 @@ const generateCodeFunction = inngest.createFunction(
               "Something went wrong during code generation. Please try again.",
             role: "ASSISTANT",
             type: "ERROR",
+            projectId: event.data.projectId,
           },
         });
       }
@@ -62,6 +63,7 @@ const generateCodeFunction = inngest.createFunction(
               files: result.state.data.files,
             },
           },
+          projectId: event.data.projectId,
         },
       });
     });
