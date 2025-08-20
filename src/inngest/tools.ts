@@ -1,5 +1,6 @@
 import { getSandbox } from "@/e2b/utils";
-import { createTool } from "@inngest/agent-kit";
+import { AgentState } from "@/inngest/types";
+import { createTool, type Tool } from "@inngest/agent-kit";
 import z from "zod";
 
 export const terminal = createTool({
@@ -8,7 +9,7 @@ export const terminal = createTool({
   parameters: z.object({
     command: z.string(),
   }),
-  handler: async ({ command }, { step, network }) => {
+  handler: async ({ command }, { step, network }: Tool.Options<AgentState>) => {
     const sandboxId = network.state.data.sandboxId;
     if (!sandboxId) {
       throw new Error(
@@ -52,7 +53,7 @@ export const createOrUpdateFiles = createTool({
       })
     ),
   }),
-  handler: async ({ files }, { step, network }) => {
+  handler: async ({ files }, { step, network }: Tool.Options<AgentState>) => {
     const sandboxId = network.state.data.sandboxId;
     if (!sandboxId) {
       throw new Error(
@@ -96,7 +97,7 @@ export const readFiles = createTool({
   parameters: z.object({
     files: z.array(z.string()),
   }),
-  handler: async ({ files }, { step, network }) => {
+  handler: async ({ files }, { step, network }: Tool.Options<AgentState>) => {
     const sandboxId = network.state.data.sandboxId;
     if (!sandboxId) {
       throw new Error(
