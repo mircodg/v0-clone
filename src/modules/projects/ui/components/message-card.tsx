@@ -129,11 +129,7 @@ const MessageCard = ({
       />
     );
   }
-  return (
-    <p>
-      <UserMessage content={content} />
-    </p>
-  );
+  return <UserMessage content={content} />;
 };
 
 export default MessageCard;
