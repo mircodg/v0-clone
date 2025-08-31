@@ -6,7 +6,7 @@ const ShimmerMessages = () => {
     "Thinking...",
     "Loading...",
     "Generating...",
-    "Analizing your request...",
+    "Analyzing your request...",
     "Adding final touches...",
     "Almost ready...",
   ];
