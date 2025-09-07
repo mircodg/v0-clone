@@ -18,6 +18,7 @@ function FragmentWeb({ data }: FragmentWebProps) {
   };
 
   const handleCopy = async () => {
+    // TODO: check if this works.
     if (!data.sandboxUrl) return;
     try {
       navigator.clipboard.writeText(data.sandboxUrl);
