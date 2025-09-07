@@ -155,7 +155,7 @@ export const FileExplorer = ({ files }: FileExplorerProps) => {
             </div>
           </div>
         ) : (
-          <div>Select a file to view it&apos;s content</div>
+          <div>Select a file to view its content</div>
         )}
       </ResizablePanel>
     </ResizablePanelGroup>

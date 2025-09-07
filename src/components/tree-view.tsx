@@ -88,9 +88,8 @@ const Tree = ({ item, selectedValue, onSelect, parentPath }: TreeProps) => {
           <SidebarMenuButton>
             {/* This is going to rotate once the collapsible is open */}
             <ChevronRightIcon className="transition-transform" />
-            <FolderIcon>
-              <span className="truncate">{name}</span>
-            </FolderIcon>
+            <FolderIcon />
+            <span className="truncate">{name}</span>
           </SidebarMenuButton>
         </CollapsibleTrigger>
         <CollapsibleContent>

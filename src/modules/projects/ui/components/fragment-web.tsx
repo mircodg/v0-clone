@@ -21,7 +21,7 @@ function FragmentWeb({ data }: FragmentWebProps) {
     // TODO: check if this works.
     if (!data.sandboxUrl) return;
     try {
-      navigator.clipboard.writeText(data.sandboxUrl);
+      await navigator.clipboard.writeText(data.sandboxUrl);
       setCopied(true);
       toast.success("Copied to clipboard");
     } catch {
