@@ -1,10 +1,4 @@
-export type ProjectTemplate = {
-  emoji: string;
-  title: string;
-  prompt: string;
-};
-
-export const PROJECT_TEMPLATES: ProjectTemplate[] = [
+export const PROJECT_TEMPLATES = [
   {
     emoji: "🎬",
     title: "Build a Netflix clone",

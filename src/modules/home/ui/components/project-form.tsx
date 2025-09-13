@@ -88,7 +88,7 @@ const ProjectForm = () => {
                 className="pt-4 resize-none border-none w-full outline-none bg-transparent"
                 placeholder="What would you like to build?"
                 onKeyDown={(e) => {
-                  if ((e.key === "Enter" && e.ctrlKey) || e.metaKey) {
+                  if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
                     e.preventDefault();
                     form.handleSubmit(onSubmit)(e);
                   }
