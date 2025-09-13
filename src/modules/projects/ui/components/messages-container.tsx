@@ -18,6 +18,7 @@ export const MessagesContainer = ({
 }: MessagesContainerProps) => {
   // auto scroll to bottom on refresh ref
   const bottomRef = useRef<HTMLDivElement>(null);
+  const lastAssistantMessageIdRef = useRef<string | null>(null);
 
   // get prefetched messages
   const trpc = useTRPC();
@@ -30,11 +31,15 @@ export const MessagesContainer = ({
   // set active fragment
   useEffect(() => {
     const lastAssistantMessage = messages.findLast(
-      (message) => message.role === "ASSISTANT" && !!message.fragments
+      (message) => message.role === "ASSISTANT"
     );
 
-    if (lastAssistantMessage) {
+    if (
+      lastAssistantMessage?.fragments &&
+      lastAssistantMessage.id !== lastAssistantMessageIdRef.current
+    ) {
       setActiveFragment(lastAssistantMessage.fragments);
+      lastAssistantMessageIdRef.current = lastAssistantMessage.id;
     }
   }, [messages, setActiveFragment]);
 

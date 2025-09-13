@@ -107,16 +107,19 @@ export const FileExplorer = ({ files }: FileExplorerProps) => {
     [files]
   );
 
-  const handleCopy = useCallback(() => {
-    if (selectedFile) {
-      navigator.clipboard.writeText(files[selectedFile]);
+  const handleCopy = useCallback(async () => {
+    if (!selectedFile) return;
+    try {
+      await navigator.clipboard.writeText(files[selectedFile]);
       setCopied(true);
-      setTimeout(() => {
+      toast.success("Copied to clipboard");
+    } catch {
+      toast.error("Failed to copy to clipboard");
+    } finally {
+      const timeout = setTimeout(() => {
         setCopied(false);
       }, 2000);
-      toast.success("Copied to clipboard");
-    } else {
-      toast.error("No file selected");
+      return () => clearTimeout(timeout);
     }
   }, [selectedFile, files]);
 

@@ -33,8 +33,10 @@ const MessageForm = ({ projectId }: MessageFormProps) => {
             projectId,
           })
         );
+        //TODO: invalidate usage status
       },
       onError: (error) => {
+        //TODO: redirect to pricing page
         toast.error(error.message);
       },
     })
