@@ -43,9 +43,6 @@ const ProjectList = () => {
                   </p>
                 </div>
               </div>
-              <span className="text-sm text-muted-foreground">
-                {formatDistanceToNow(project.createdAt)}
-              </span>
             </Link>
           </Button>
         ))}
