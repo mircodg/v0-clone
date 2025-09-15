@@ -7,6 +7,7 @@ export const env = createEnv({
     NODE_ENV: z.enum(["development", "test", "production"]),
     OPENAI_API_KEY: z.string(),
     E2B_API_KEY: z.string(),
+    CLERK_SECRET_KEY: z.string(),
   },
   // If you're using Next.js < 13.4.4, you'll need to specify the runtimeEnv manually
   // runtimeEnv: {

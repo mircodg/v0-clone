@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 import { FileCollection, FileExplorer } from "@/components/file-explorer";
+import { UserControl } from "@/components/user-control";
 
 interface ProjectViewProps {
   projectId: string;
@@ -73,6 +74,7 @@ const ProjectView = ({ projectId }: ProjectViewProps) => {
                     <CrownIcon /> Upgrade
                   </Link>
                 </Button>
+                <UserControl />
               </div>
             </div>
             <TabsContent value="preview">
