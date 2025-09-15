@@ -13,6 +13,7 @@ import { Form, FormField } from "@/components/ui/form";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { PROJECT_TEMPLATES } from "../../constants";
+import { useClerk } from "@clerk/nextjs";
 
 const formSchema = z.object({
   value: z.string().min(1, "Value is required").max(10000, "Value is too long"),
@@ -20,6 +21,7 @@ const formSchema = z.object({
 
 const ProjectForm = () => {
   const trpc = useTRPC();
+  const clerk = useClerk();
   const queryClient = useQueryClient();
   const router = useRouter();
 
@@ -39,8 +41,12 @@ const ProjectForm = () => {
         //TODO: invalidate usage status
       },
       onError: (error) => {
-        //TODO: redirect to pricing page
         toast.error(error.message);
+
+        if (error.data?.code === "UNAUTHORIZED") {
+          clerk.openSignIn();
+        }
+        //TODO: redirect to pricing page
       },
     })
   );

@@ -1,2 +1,19 @@
--- DropIndex
-DROP INDEX "Project_name_key";
+-- CreateTable
+CREATE TABLE "Project" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Project_pkey" PRIMARY KEY ("id")
+);
+
+-- AlterTable
+ALTER TABLE "Message" ADD COLUMN "projectId" TEXT NOT NULL;
+
+-- AddForeignKey
+ALTER TABLE "Message" ADD CONSTRAINT "Message_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- DropIndex (safe if the index never existed)
+DROP INDEX IF EXISTS "Project_name_key";
