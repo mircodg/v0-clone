@@ -4,6 +4,7 @@ import { inngest } from "@/inngest/client";
 import { generateSlug } from "random-word-slugs";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
+import { consumeCredits } from "@/lib/usage";
 
 export const projectsRouter = createTRPCRouter({
   getOne: protectedProcedure
@@ -47,6 +48,22 @@ export const projectsRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
+      try {
+        await consumeCredits();
+      } catch (error) {
+        if (error instanceof Error) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Something went wrong",
+          });
+        } else {
+          throw new TRPCError({
+            code: "TOO_MANY_REQUESTS",
+            message: "You have used all your credits",
+          });
+        }
+      }
+
       const newProject = await prisma.project.create({
         data: {
           name: generateSlug(2, { format: "kebab" }),
