@@ -20,9 +20,10 @@ export function lastAssistantMessageContent(result: AgentResult) {
 }
 
 // util function to generate fragment title and response
-export function parseAgentOutput(value: Message[]) {
+export function parseAgentOutput(value: Message[], fallback: string) {
+  if (!value || value.length === 0) return fallback;
   const output = value[0];
-  if (output.type !== "text") return "Here you go";
+  if (output.type !== "text") return fallback;
   if (Array.isArray(output.content)) {
     return output.content.map((text) => text).join("");
   }

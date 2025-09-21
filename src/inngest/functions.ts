@@ -101,13 +101,13 @@ const generateCodeFunction = inngest.createFunction(
 
       return await prisma.message.create({
         data: {
-          content: parseAgentOutput(responseOutput),
+          content: parseAgentOutput(responseOutput, "Here you go"),
           role: "ASSISTANT",
           type: "RESULT",
           fragments: {
             create: {
               sandboxUrl: sandboxUrl,
-              title: parseAgentOutput(fragmentTitleOutput),
+              title: parseAgentOutput(fragmentTitleOutput, "Fragment"),
               files: result.state.data.files,
             },
           },
