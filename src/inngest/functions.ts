@@ -3,6 +3,10 @@ import { Sandbox } from "@e2b/code-interpreter";
 import { getSandbox } from "@/e2b/utils";
 import { network } from "@/inngest/network";
 import prisma from "@/lib/prisma";
+import { createState, type Message } from "@inngest/agent-kit";
+import { AgentState } from "./types";
+import { fragmentTitleGeneratorAgent, responseGeneratorAgent } from "./agents";
+import { parseAgentOutput } from "./utils";
 
 // Inngest function to generate and run code in a sandbox
 const generateCodeFunction = inngest.createFunction(
@@ -15,13 +19,45 @@ const generateCodeFunction = inngest.createFunction(
       return sandbox.sandboxId;
     });
 
+    // fetch previous messages for agent memory
+    const previousMessages = await step.run(
+      "fetch-previous-messages",
+      async () => {
+        const formattedMessages: Message[] = [];
+        const messages = await prisma.message.findMany({
+          where: {
+            projectId: event.data.projectId,
+          },
+          orderBy: {
+            createdAt: "asc",
+          },
+        });
+        for (const message of messages) {
+          formattedMessages.push({
+            type: "text",
+            role: message.role === "ASSISTANT" ? "assistant" : "user",
+            content: message.content,
+          });
+        }
+        return formattedMessages;
+      }
+    );
+
+    // initialize the network state with the previous messages
+    const state = createState<AgentState>(
+      {
+        summary: "",
+        files: {},
+        sandboxId: sandboxId,
+      },
+      {
+        messages: previousMessages,
+      }
+    );
+
     // initialize the network state with the sandbox id
     const result = await network.run(event.data.text, {
-      state: {
-        data: {
-          sandboxId: sandboxId,
-        },
-      },
+      state: state,
     });
 
     // generate sandbox url
@@ -30,6 +66,18 @@ const generateCodeFunction = inngest.createFunction(
       const host = sandbox.getHost(3000);
       return `https://${host}`;
     });
+
+    // generate fragment title and response
+    const { output: fragmentTitleOutput } =
+      await fragmentTitleGeneratorAgent.run(result.state.data.summary, {
+        state: result.state,
+      });
+    const { output: responseOutput } = await responseGeneratorAgent.run(
+      result.state.data.summary,
+      {
+        state: result.state,
+      }
+    );
 
     // check if something went wrong during agent network run
     const isError =
@@ -53,13 +101,13 @@ const generateCodeFunction = inngest.createFunction(
 
       return await prisma.message.create({
         data: {
-          content: result.state.data.summary,
+          content: parseAgentOutput(responseOutput),
           role: "ASSISTANT",
           type: "RESULT",
           fragments: {
             create: {
               sandboxUrl: sandboxUrl,
-              title: "Fragment",
+              title: parseAgentOutput(fragmentTitleOutput),
               files: result.state.data.files,
             },
           },

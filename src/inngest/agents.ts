@@ -1,6 +1,10 @@
 import { openai, createAgent } from "@inngest/agent-kit";
 import { readFiles, createOrUpdateFiles, terminal } from "@/inngest/tools";
-import { PROMPT } from "@/inngest/prompt";
+import {
+  PROMPT,
+  FRAGMENT_TITLE_PROMPT,
+  RESPONSE_PROMPT,
+} from "@/inngest/prompt";
 import { lastAssistantMessageContent } from "@/inngest/utils";
 import { AgentState } from "@/inngest/types";
 
@@ -22,4 +26,18 @@ export const codeAgent = createAgent<AgentState>({
       return result;
     },
   },
+});
+
+export const fragmentTitleGeneratorAgent = createAgent<AgentState>({
+  name: "fragment-title-generator-agent",
+  description: "An expert fragment title generator agent",
+  system: FRAGMENT_TITLE_PROMPT,
+  model: openai({ model: "gpt-4o" }),
+});
+
+export const responseGeneratorAgent = createAgent<AgentState>({
+  name: "response-generator-agent",
+  description: "An expert response generator agent",
+  system: RESPONSE_PROMPT,
+  model: openai({ model: "gpt-4o" }),
 });

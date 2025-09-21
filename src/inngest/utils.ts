@@ -1,4 +1,4 @@
-import { AgentResult, TextMessage } from "@inngest/agent-kit";
+import { AgentResult, type Message, TextMessage } from "@inngest/agent-kit";
 
 export function lastAssistantMessageContent(result: AgentResult) {
   // retrieve last assistant message
@@ -17,4 +17,14 @@ export function lastAssistantMessageContent(result: AgentResult) {
       ? message.content
       : message.content.map((c) => c.text).join("")
     : undefined;
+}
+
+// util function to generate fragment title and response
+export function parseAgentOutput(value: Message[]) {
+  const output = value[0];
+  if (output.type !== "text") return "Here you go";
+  if (Array.isArray(output.content)) {
+    return output.content.map((text) => text).join("");
+  }
+  return output.content;
 }
