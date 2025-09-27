@@ -4,7 +4,7 @@ import { getSandbox } from "@/e2b/utils";
 import { network } from "@/inngest/network";
 import prisma from "@/lib/prisma";
 import { createState, type Message } from "@inngest/agent-kit";
-import { AgentState } from "./types";
+import { AgentState, SANDBOX_TIMEOUT } from "@/inngest/types";
 import { fragmentTitleGeneratorAgent, responseGeneratorAgent } from "./agents";
 import { parseAgentOutput } from "./utils";
 
@@ -16,6 +16,8 @@ const generateCodeFunction = inngest.createFunction(
     // fetch sandbox id
     const sandboxId = await step.run("fetch-sandbox", async () => {
       const sandbox = await Sandbox.create("v0-clone-nextjs-template");
+      // change timeout to half an hour (maximum time that the sandbox can run)
+      await sandbox.setTimeout(SANDBOX_TIMEOUT);
       return sandbox.sandboxId;
     });
 
@@ -31,6 +33,7 @@ const generateCodeFunction = inngest.createFunction(
           orderBy: {
             createdAt: "asc",
           },
+          take: 5, // maximum 5 messages to avoid overwhelming the agent
         });
         for (const message of messages) {
           formattedMessages.push({
