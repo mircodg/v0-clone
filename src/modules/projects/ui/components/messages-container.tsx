@@ -23,9 +23,14 @@ export const MessagesContainer = ({
   // get prefetched messages
   const trpc = useTRPC();
   const { data: messages } = useSuspenseQuery(
-    trpc.messages.getMany.queryOptions({
-      projectId: projectId,
-    })
+    trpc.messages.getMany.queryOptions(
+      {
+        projectId: projectId,
+      },
+      {
+        refetchInterval: 2000,
+      }
+    )
   );
 
   // set active fragment
