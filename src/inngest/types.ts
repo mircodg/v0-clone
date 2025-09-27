@@ -4,4 +4,4 @@ export interface AgentState {
   files: { [path: string]: string };
 }
 
-export const SANDBOX_TIMEOUT = 60_000 * 10 * 30; // 30 minutes in milliseconds
+export const SANDBOX_TIMEOUT = 60_000 * 10 * 3; // 30 minutes in milliseconds
