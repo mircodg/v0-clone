@@ -1,6 +1,6 @@
 ### v0-clone
 
-![v0-clone hero](public/hero.png)
+![v0-clone hero](public/demo.png)
 
 An open-source clone of Vercel's v0 experience: describe what you want to build, and an AI coding agent generates a working Next.js fragment in a disposable sandbox. Each iteration is saved as a message with an attached code fragment and a live preview.
 
